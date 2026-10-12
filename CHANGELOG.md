@@ -3,6 +3,49 @@
 All notable changes to Helix are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Agent skill** (`skills/helix-gene-editing/`) — packages the MCP server as an
+  installable skill: `SKILL.md` (workflow, modality picker, reporting template,
+  guardrails), three reference docs (modality recipes, output field reference,
+  troubleshooting), and eight example specs that compile offline. The server provides
+  the capability; the skill tells an agent when and how to use it.
+- **`skills/build_skill_zip.py`** — validates a skill (frontmatter contract, resolvable
+  references, supporting files) and packages it as a byte-for-byte reproducible zip for
+  skill registries. `--check` validates only; `--flat` puts `SKILL.md` at the zip root.
+- **28 skill tests** (`tests/test_skill.py`) — assert the skill's documented tool names
+  match the server's, its examples still compile offline and stay byte-identical to
+  `examples/`, and the error messages and HDR output shape quoted in its docs are what
+  the compiler actually produces.
+
+- **`tests/test_adapter_api_contract.py`** — probes the optional-model adapters against
+  stubs shaped like their *upstream* APIs, rather than fakes shaped like the adapter.
+  `indelphi` passes; `behive` and `pridict` are pinned with strict xfails.
+
+### Fixed
+- `helix.__version__` reported `0.1.0` in the released 0.1.1 package, so `helix
+  --version`, the MCP `serverInfo`, and every design's `provenance.helix_version`
+  stamped the wrong version.
+- **README no longer claims `behive` and `pridict` are "wired".** Both adapters call a
+  signature their upstream package does not expose, so installing the real package turns
+  a clean `NotConfigured` error into a `TypeError`/`AttributeError` mid-compile. The
+  status column now distinguishes working backends from adapter stubs, and a note
+  explains the failure mode. The adapters themselves are unchanged and still need fixing.
+
+### Notes
+- The suite reports **261 passed, 2 skipped, 2 xfailed** on a clean clone. Two further
+  test modules activate only where optional material is present, so a working tree that
+  has it will report more passes and fewer skips.
+
+### Known issues
+- `behive` (`base_edit_model`) and `pridict` (`prime_edit_model`) are registered but not
+  functional; use `window_heuristic` / `pe_heuristic`. Their existing tests pass against
+  injected fakes that match the invented API.
+- `indelphi` hardcodes the `mESC` cell type in `default_registry()`; the DSL has no key
+  to set it, so a spec selecting `indelphi` reports mESC predictions regardless of
+  `cell_line`.
+
 ## [0.1.1] — 2026-07-12
 
 - **docs**: use absolute image/link URLs in the README so images and links render on

@@ -8,4 +8,4 @@ resolved, provenance-stamped ``ResolvedDesign``.
 The public entry point is :func:`helix.compiler.pipeline.compile_spec`.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"

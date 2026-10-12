@@ -9,7 +9,7 @@
 [![PyPI](https://img.shields.io/pypi/v/helix-dsl?color=5b53e0&label=pypi)](https://pypi.org/project/helix-dsl/)
 [![License](https://img.shields.io/github/license/coindef/Helix?color=5b53e0)](https://github.com/coindef/Helix/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-5b53e0)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-231%20passing-0b7a5d)](https://github.com/coindef/Helix/tree/main/tests)
+[![Tests](https://img.shields.io/badge/tests-261%20passing-0b7a5d)](https://github.com/coindef/Helix/tree/main/tests)
 [![MCP](https://img.shields.io/badge/MCP-server-5b53e0)](#mcp-server)
 [![Accessibility](https://img.shields.io/badge/a11y-WCAG_2.1_AA-0b7a5d)](#web-ui)
 
@@ -128,6 +128,23 @@ ranked, safety-screened design summary), **`helix_resolve_gene`** (symbol → se
 locus), **`helix_list_models`** (selectable backends). MCP is simply a fourth transport
 (alongside HTTP / subprocess / import) that connects agents to the compiler.
 
+### Agent skill
+
+The server gives an agent the *capability*; the bundled **agent skill** gives it the
+*judgement* — which modality fits the request, how to write a valid spec, how to read
+`feasible` / `safety` / `infeasibility_notes`, and what never to claim about a heuristic
+score. It ships as [`skills/helix-gene-editing/`](https://github.com/coindef/Helix/tree/main/skills/helix-gene-editing)
+(`SKILL.md` + reference docs + eight runnable specs).
+
+```bash
+pip install helix-dsl
+claude mcp add helix -- helix mcp                            # the capability
+cp -r skills/helix-gene-editing ~/.claude/skills/            # the judgement
+```
+
+`python skills/build_skill_zip.py` packages it as a deterministic zip for skill
+registries. Details → [`skills/README.md`](https://github.com/coindef/Helix/blob/main/skills/README.md).
+
 ## Backends
 
 The deterministic spine runs fully offline on honest, clearly-labelled heuristics; each
@@ -136,16 +153,27 @@ is a drop-in target for a real tool behind the **same Protocol** — selected by
 | role | built-in | real tool (same interface) | status |
 |---|---|---|---|
 | sequence | `inline` | **`ensembl`**, **`ncbi`**, **`fallback`** (Ensembl→NCBI) | live + fallback |
-| on-target | `heuristic_gc` | **`rule_set_1`** (Doench 2014) | wired |
-| off-target | `mock_seed` | **`cas_offinder_cfd`** (CFD; scan needs a genome) | wired |
-| repair outcome | `mock_indel` | **`indelphi`** (Shen 2018) | wired |
-| base-edit outcome | `window_heuristic` | **`behive`** (Arbab 2020) | wired |
-| prime-edit outcome | `pe_heuristic` | **`pridict`** (Mathis 2023) | wired |
+| on-target | `heuristic_gc` | **`rule_set_1`** (Doench 2014) | **working**, no setup |
+| off-target | `mock_seed` | **`cas_offinder_cfd`** (CFD; scan needs a genome) | **working** with a genome |
+| repair outcome | `mock_indel` | **`indelphi`** (Shen 2018) | **working** with the package |
+| base-edit outcome | `window_heuristic` | `behive` (Arbab 2020) | adapter stub — see below |
+| prime-edit outcome | `pe_heuristic` | `pridict` (Mathis 2023) | adapter stub — see below |
 | structure / folding | `esmfold` (real, no key) | **AlphaFold3 / Boltz** (`HELIX_FOLDING_BIN`) | ESMFold live |
 
 The verified-real cores (Doench 2014, Doench 2016 CFD) are pure and always on; heavy
 models sit behind injectable boundaries — configured in when a genome/tool is present,
 and raising a clear error otherwise so the `mock_*` path always runs offline.
+
+> **`behive` and `pridict` are not usable yet.** Both are registered, so
+> `helix_list_models` lists them and a spec can name them, but their adapters call a
+> signature the upstream packages do not expose (`be_predict_efficiency` wants
+> `init_model(...)` then `predict(seq)` → `(df, stats)`; PRIDICT ships a CLI, not an
+> importable `predict()`). With the package absent you get a clean `NotConfigured`
+> error; with it installed you get a `TypeError`/`AttributeError` mid-compile. The
+> existing tests pass because they inject fakes shaped like the adapter, so they cannot
+> catch this — `tests/test_adapter_api_contract.py` pins it with strict xfails that will
+> flip to XPASS the moment either adapter is corrected. **Until then, base editing stays
+> on `window_heuristic` and prime editing on `pe_heuristic`.**
 
 ## Web UI
 

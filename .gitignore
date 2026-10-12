@@ -21,3 +21,7 @@ frontend/dist/
 .agents/
 skills-lock.json
 *.log
+
+# Commercial skill: NOT Apache-2.0, deliberately untracked so publishing this
+# repo does not license it away. Shipped as a zip from skills/build_skill_zip.py.
+skills/helix-validated-backends/
