@@ -26,10 +26,15 @@ REFERENCES = SKILL_DIR / "references"
 # a working tree (or in a private repo) and is shipped as a zip. These tests therefore
 # only run where it is present. The adapter findings it depends on are pinned publicly by
 # tests/test_adapter_api_contract.py, which always runs.
-pytestmark = pytest.mark.skipif(
-    not SKILL_MD.is_file(),
-    reason="helix-validated-backends is not present in this checkout (untracked by design)",
-)
+#
+# This skip must happen at MODULE level and before the loads below: the helper modules are
+# imported at import time, so a function-level skipif would still hit a FileNotFoundError
+# during collection and fail the whole suite on a fresh clone.
+if not SKILL_MD.is_file():  # pragma: no cover - exercised only on a clone without the skill
+    pytest.skip(
+        "helix-validated-backends is not present in this checkout (untracked by design)",
+        allow_module_level=True,
+    )
 
 
 def _load(path, name):

@@ -33,6 +33,11 @@ All notable changes to Helix are documented here. This project adheres to
   status column now distinguishes working backends from adapter stubs, and a note
   explains the failure mode. The adapters themselves are unchanged and still need fixing.
 
+### Notes
+- The suite reports **261 passed, 2 skipped, 2 xfailed** on a clean clone. Two further
+  test modules activate only where optional material is present, so a working tree that
+  has it will report more passes and fewer skips.
+
 ### Known issues
 - `behive` (`base_edit_model`) and `pridict` (`prime_edit_model`) are registered but not
   functional; use `window_heuristic` / `pe_heuristic`. Their existing tests pass against

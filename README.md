@@ -9,7 +9,7 @@
 [![PyPI](https://img.shields.io/pypi/v/helix-dsl?color=5b53e0&label=pypi)](https://pypi.org/project/helix-dsl/)
 [![License](https://img.shields.io/github/license/coindef/Helix?color=5b53e0)](https://github.com/coindef/Helix/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-5b53e0)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-259%20passing-0b7a5d)](https://github.com/coindef/Helix/tree/main/tests)
+[![Tests](https://img.shields.io/badge/tests-261%20passing-0b7a5d)](https://github.com/coindef/Helix/tree/main/tests)
 [![MCP](https://img.shields.io/badge/MCP-server-5b53e0)](#mcp-server)
 [![Accessibility](https://img.shields.io/badge/a11y-WCAG_2.1_AA-0b7a5d)](#web-ui)
 
