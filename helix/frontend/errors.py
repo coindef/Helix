@@ -59,6 +59,8 @@ def parse_source(source: str, fmt: str = "helix") -> ExperimentSpec:
     Raises :class:`SpecError` with a clean message (and line/col for syntax errors).
     """
     try:
+        if fmt not in {"helix", "yaml"}:
+            raise ValueError(f"unsupported source format: {fmt!r}")
         return parse_spec(source) if fmt == "yaml" else parse_helix(source)
     except HelixSyntaxError as exc:
         raise SpecError(str(exc), kind="syntax", line=exc.line, col=exc.col) from exc
