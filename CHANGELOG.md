@@ -19,10 +19,27 @@ All notable changes to Helix are documented here. This project adheres to
   `examples/`, and the error messages and HDR output shape quoted in its docs are what
   the compiler actually produces.
 
+- **`tests/test_adapter_api_contract.py`** — probes the optional-model adapters against
+  stubs shaped like their *upstream* APIs, rather than fakes shaped like the adapter.
+  `indelphi` passes; `behive` and `pridict` are pinned with strict xfails.
+
 ### Fixed
 - `helix.__version__` reported `0.1.0` in the released 0.1.1 package, so `helix
   --version`, the MCP `serverInfo`, and every design's `provenance.helix_version`
   stamped the wrong version.
+- **README no longer claims `behive` and `pridict` are "wired".** Both adapters call a
+  signature their upstream package does not expose, so installing the real package turns
+  a clean `NotConfigured` error into a `TypeError`/`AttributeError` mid-compile. The
+  status column now distinguishes working backends from adapter stubs, and a note
+  explains the failure mode. The adapters themselves are unchanged and still need fixing.
+
+### Known issues
+- `behive` (`base_edit_model`) and `pridict` (`prime_edit_model`) are registered but not
+  functional; use `window_heuristic` / `pe_heuristic`. Their existing tests pass against
+  injected fakes that match the invented API.
+- `indelphi` hardcodes the `mESC` cell type in `default_registry()`; the DSL has no key
+  to set it, so a spec selecting `indelphi` reports mESC predictions regardless of
+  `cell_line`.
 
 ## [0.1.1] — 2026-07-12
 

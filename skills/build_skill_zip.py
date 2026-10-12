@@ -25,7 +25,7 @@ DEFAULT_SKILL = SKILLS_DIR / "helix-gene-editing"
 _NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 _MAX_NAME, _MAX_DESCRIPTION = 64, 1024
 _ZIP_EPOCH = (1980, 1, 1, 0, 0, 0)
-_LOCAL_LINK_RE = re.compile(r"`((?:references|examples)/[\w./-]+)`")
+_LOCAL_LINK_RE = re.compile(r"`((?:references|examples|scripts)/[\w./-]+)`")
 
 
 def read_frontmatter(skill_md: Path) -> dict:

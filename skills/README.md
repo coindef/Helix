@@ -7,8 +7,17 @@ read the verdicts, and what never to claim about a heuristic score.
 
 | | |
 |---|---|
-| `helix-gene-editing/` | The skill: `SKILL.md`, three reference docs, eight runnable example specs. |
-| `build_skill_zip.py` | Validates the skill and packages it as a deterministic zip. |
+| `helix-gene-editing/` | The free skill (Apache-2.0): `SKILL.md`, three reference docs, eight runnable example specs. |
+| `build_skill_zip.py` | Validates any skill directory and packages it as a deterministic zip. |
+
+A second, commercial skill (`helix-validated-backends`) covers switching a design onto
+the validated models — Cas-OFFinder + a reference genome, inDelphi, `rule_set_1` — and
+verifying through `provenance.adapters` that the real model actually ran. It is
+**deliberately not in this repository**: this repo is public and Apache-2.0, so
+committing it here would license it away. It lives untracked (see `.gitignore`) or in a
+private repo, and ships as a zip built by the same script. `tests/test_skill_validated.py`
+skips when it is absent; the adapter findings it relies on are pinned for everyone by
+`tests/test_adapter_api_contract.py`.
 
 ## Install it
 

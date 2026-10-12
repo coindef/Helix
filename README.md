@@ -153,16 +153,27 @@ is a drop-in target for a real tool behind the **same Protocol** — selected by
 | role | built-in | real tool (same interface) | status |
 |---|---|---|---|
 | sequence | `inline` | **`ensembl`**, **`ncbi`**, **`fallback`** (Ensembl→NCBI) | live + fallback |
-| on-target | `heuristic_gc` | **`rule_set_1`** (Doench 2014) | wired |
-| off-target | `mock_seed` | **`cas_offinder_cfd`** (CFD; scan needs a genome) | wired |
-| repair outcome | `mock_indel` | **`indelphi`** (Shen 2018) | wired |
-| base-edit outcome | `window_heuristic` | **`behive`** (Arbab 2020) | wired |
-| prime-edit outcome | `pe_heuristic` | **`pridict`** (Mathis 2023) | wired |
+| on-target | `heuristic_gc` | **`rule_set_1`** (Doench 2014) | **working**, no setup |
+| off-target | `mock_seed` | **`cas_offinder_cfd`** (CFD; scan needs a genome) | **working** with a genome |
+| repair outcome | `mock_indel` | **`indelphi`** (Shen 2018) | **working** with the package |
+| base-edit outcome | `window_heuristic` | `behive` (Arbab 2020) | adapter stub — see below |
+| prime-edit outcome | `pe_heuristic` | `pridict` (Mathis 2023) | adapter stub — see below |
 | structure / folding | `esmfold` (real, no key) | **AlphaFold3 / Boltz** (`HELIX_FOLDING_BIN`) | ESMFold live |
 
 The verified-real cores (Doench 2014, Doench 2016 CFD) are pure and always on; heavy
 models sit behind injectable boundaries — configured in when a genome/tool is present,
 and raising a clear error otherwise so the `mock_*` path always runs offline.
+
+> **`behive` and `pridict` are not usable yet.** Both are registered, so
+> `helix_list_models` lists them and a spec can name them, but their adapters call a
+> signature the upstream packages do not expose (`be_predict_efficiency` wants
+> `init_model(...)` then `predict(seq)` → `(df, stats)`; PRIDICT ships a CLI, not an
+> importable `predict()`). With the package absent you get a clean `NotConfigured`
+> error; with it installed you get a `TypeError`/`AttributeError` mid-compile. The
+> existing tests pass because they inject fakes shaped like the adapter, so they cannot
+> catch this — `tests/test_adapter_api_contract.py` pins it with strict xfails that will
+> flip to XPASS the moment either adapter is corrected. **Until then, base editing stays
+> on `window_heuristic` and prime editing on `pe_heuristic`.**
 
 ## Web UI
 
