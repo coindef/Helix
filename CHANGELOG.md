@@ -3,6 +3,27 @@
 All notable changes to Helix are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Agent skill** (`skills/helix-gene-editing/`) — packages the MCP server as an
+  installable skill: `SKILL.md` (workflow, modality picker, reporting template,
+  guardrails), three reference docs (modality recipes, output field reference,
+  troubleshooting), and eight example specs that compile offline. The server provides
+  the capability; the skill tells an agent when and how to use it.
+- **`skills/build_skill_zip.py`** — validates a skill (frontmatter contract, resolvable
+  references, supporting files) and packages it as a byte-for-byte reproducible zip for
+  skill registries. `--check` validates only; `--flat` puts `SKILL.md` at the zip root.
+- **28 skill tests** (`tests/test_skill.py`) — assert the skill's documented tool names
+  match the server's, its examples still compile offline and stay byte-identical to
+  `examples/`, and the error messages and HDR output shape quoted in its docs are what
+  the compiler actually produces.
+
+### Fixed
+- `helix.__version__` reported `0.1.0` in the released 0.1.1 package, so `helix
+  --version`, the MCP `serverInfo`, and every design's `provenance.helix_version`
+  stamped the wrong version.
+
 ## [0.1.1] — 2026-07-12
 
 - **docs**: use absolute image/link URLs in the README so images and links render on

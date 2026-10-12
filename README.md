@@ -9,7 +9,7 @@
 [![PyPI](https://img.shields.io/pypi/v/helix-dsl?color=5b53e0&label=pypi)](https://pypi.org/project/helix-dsl/)
 [![License](https://img.shields.io/github/license/coindef/Helix?color=5b53e0)](https://github.com/coindef/Helix/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-5b53e0)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-231%20passing-0b7a5d)](https://github.com/coindef/Helix/tree/main/tests)
+[![Tests](https://img.shields.io/badge/tests-259%20passing-0b7a5d)](https://github.com/coindef/Helix/tree/main/tests)
 [![MCP](https://img.shields.io/badge/MCP-server-5b53e0)](#mcp-server)
 [![Accessibility](https://img.shields.io/badge/a11y-WCAG_2.1_AA-0b7a5d)](#web-ui)
 
@@ -127,6 +127,23 @@ Tools: **`helix_reference`** (grammar + guide + examples), **`helix_compile`** (
 ranked, safety-screened design summary), **`helix_resolve_gene`** (symbol → sequence +
 locus), **`helix_list_models`** (selectable backends). MCP is simply a fourth transport
 (alongside HTTP / subprocess / import) that connects agents to the compiler.
+
+### Agent skill
+
+The server gives an agent the *capability*; the bundled **agent skill** gives it the
+*judgement* — which modality fits the request, how to write a valid spec, how to read
+`feasible` / `safety` / `infeasibility_notes`, and what never to claim about a heuristic
+score. It ships as [`skills/helix-gene-editing/`](https://github.com/coindef/Helix/tree/main/skills/helix-gene-editing)
+(`SKILL.md` + reference docs + eight runnable specs).
+
+```bash
+pip install helix-dsl
+claude mcp add helix -- helix mcp                            # the capability
+cp -r skills/helix-gene-editing ~/.claude/skills/            # the judgement
+```
+
+`python skills/build_skill_zip.py` packages it as a deterministic zip for skill
+registries. Details → [`skills/README.md`](https://github.com/coindef/Helix/blob/main/skills/README.md).
 
 ## Backends
 
